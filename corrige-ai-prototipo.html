@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Corrige.AI — Correção de gabaritos</title>
+<style>
+:root{--bg:#0b1020;--panel:#141c31;--panel2:#1b2741;--text:#f4f7ff;--muted:#aab6d0;--accent:#7c9cff;--line:#2a3857;--good:#52d6a0;--warn:#ffd166}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#17264a 0,#0b1020 55%);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1000px;margin:auto;padding:28px 18px 60px}.brand{display:flex;align-items:center;gap:12px}.logo{display:grid;place-items:center;width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,#7c9cff,#a78bfa);color:#091126;font-size:25px;font-weight:900}.eyebrow{color:var(--accent);font-size:.78rem;text-transform:uppercase;letter-spacing:.15em;font-weight:800}h1{margin:0;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-.04em}p{color:var(--muted)}.hero{margin:26px 0}.hero p{max-width:650px}.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.card{background:rgba(20,28,49,.94);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 18px 55px #0002}.card h2{font-size:1.12rem;margin:0 0 8px}.drop{border:1.5px dashed #50648c;border-radius:16px;padding:25px 15px;text-align:center;background:#0c1428;margin:16px 0}.drop input{max-width:100%;margin-top:12px}button,.btn{border:0;border-radius:12px;padding:12px 16px;font:inherit;font-weight:750;cursor:pointer;background:var(--accent);color:#081127}button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--warn);outline-offset:3px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.small{font-size:.85rem}.muted{color:var(--muted)}.status{margin-top:12px;padding:12px;border-radius:12px;background:#0c1428;color:var(--muted);font-size:.9rem}.preview{display:none;width:100%;max-height:340px;object-fit:contain;background:#0c1428;border-radius:12px;margin-top:14px}.subjects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}.subject{padding:13px;border:1px solid var(--line);border-radius:12px;background:#0c1428}.subject label{display:block;font-size:.85rem;color:var(--muted)}.subject input{width:100%;margin-top:7px;background:#17223b;border:1px solid #354666;border-radius:8px;color:white;padding:9px}.result{display:none;margin-top:18px}.total{font-size:2rem;font-weight:850;letter-spacing:-.04em}.tag{display:inline-block;background:#163a34;color:var(--good);border-radius:999px;padding:4px 9px;font-size:.8rem;font-weight:750}.warning{color:var(--warn)}.footer{margin-top:22px;text-align:center;font-size:.82rem;color:var(--muted)}.steps{display:grid;gap:10px;margin-top:14px}.step{display:flex;gap:10px;align-items:flex-start}.num{flex:0 0 28px;height:28px;display:grid;place-items:center;border-radius:9px;background:var(--panel2);color:var(--accent);font-weight:800}@media(max-width:760px){.grid{grid-template-columns:1fr}.subjects{grid-template-columns:1fr 1fr}main{padding-top:18px}}@media(max-width:420px){.subjects{grid-template-columns:1fr}.card{padding:17px}}
+</style>
+</head>
+<body>
+<main>
+  <header class="brand"><div class="logo">C</div><div><div class="eyebrow">Correção inteligente</div><h1>Corrige.AI</h1></div></header>
+  <section class="hero"><h2>Menos trabalho. Resultado na hora.</h2><p>Envie o gabarito preenchido, confira as respostas reconhecidas e veja o desempenho por disciplina. Feito para funcionar no navegador.</p></section>
+  <section class="grid">
+    <article class="card">
+      <h2>① Envie a foto do gabarito</h2>
+      <p class="small">Para o reconhecimento automático funcionar corretamente, a foto precisa usar o modelo padronizado deste projeto. A leitura de qualquer folha ainda não está habilitada.</p>
+      <div class="drop"><div style="font-size:2rem">▧</div><strong>Escolha uma imagem</strong><br><span class="muted small">JPG, PNG ou WEBP</span><br><input id="file" type="file" accept="image/*" aria-label="Selecionar foto do gabarito"></div>
+      <img id="preview" class="preview" alt="Prévia da imagem enviada">
+      <div class="actions"><button id="readBtn" disabled>Reconhecer respostas</button><button class="secondary" id="templateBtn">Imprimir gabarito-modelo</button></div>
+      <div id="status" class="status" role="status">Aguardando uma imagem. O modo de reconhecimento será calibrado para o modelo padronizado.</div>
+    </article>
+    <article class="card">
+      <h2>② Configure o gabarito oficial</h2>
+      <p class="small">Selecione a resposta correta de cada questão. Para facilitar o teste inicial, use um gabarito de demonstração ou preencha as respostas manualmente.</p>
+      <label for="keyMode" class="small muted">Gabarito de teste</label>
+      <select id="keyMode" style="width:100%;margin-top:6px;padding:11px;border-radius:10px;background:#0c1428;border:1px solid var(--line);color:var(--text)">
+        <option value="demo">Gerar gabarito demonstrativo</option><option value="blank">Limpar respostas</option>
+      </select>
+      <div class="actions"><button class="secondary" id="makeKey">Aplicar seleção</button><button class="secondary" id="clearKey">Limpar</button></div>
+      <div id="keyStatus" class="status">Gabarito demonstrativo disponível para testar o cálculo.</div>
+      <div class="steps"><div class="step"><span class="num">1</span><span class="small">O professor cadastra as 65 respostas corretas.</span></div><div class="step"><span class="num">2</span><span class="small">O sistema identifica as marcações da folha.</span></div><div class="step"><span class="num">3</span><span class="small">Respostas incertas são confirmadas antes da nota.</span></div></div>
+    </article>
+  </section>
+  <section class="card" style="margin-top:18px">
+    <h2>③ Conferir respostas e corrigir</h2>
+    <p class="small">Esta área permite testar o cálculo enquanto o leitor de imagem é calibrado. Escolha a alternativa que o aluno marcou para cada questão.</p>
+    <div id="answers" class="subjects"></div>
+    <div class="actions"><button id="gradeBtn">Corrigir prova</button><button class="secondary" id="resetBtn">Limpar respostas do aluno</button></div>
+    <div id="result" class="result"></div>
+  </section>
+  <p class="footer">Protótipo inicial • GitHub Pages • As imagens permanecem no seu navegador nesta versão.</p>
+</main>
+<script>
+const subjects=['Português','Inglês','Educação Física','Artes','Matemática','Biologia','Física','Química','História','Geografia','Sociologia','Filosofia','Informática'];
+const letters=['A','B','C','D','E'];
+let key=Array(65).fill('');
+let student=Array(65).fill('');
+const $=id=>document.getElementById(id);
+function makeFields(){
+ const root=$('answers');root.innerHTML='';
+ for(let i=0;i<65;i++){
+  const box=document.createElement('div');box.className='subject';
+  const label=document.createElement('label');label.htmlFor='q'+i;label.textContent=`Questão ${i+1} · ${subjects[Math.floor(i/5)]}`;
+  const select=document.createElement('select');select.id='q'+i;select.style.cssText='width:100%;margin-top:7px;background:#17223b;border:1px solid #354666;border-radius:8px;color:white;padding:9px';
+  select.innerHTML='<option value="">Em branco / não reconhecida</option>'+letters.map(x=>`<option value="${x}">${x}</option>`).join('');
+  select.value=student[i];select.addEventListener('change',()=>student[i]=select.value);
+  box.append(label,select);root.append(box);
+ }
+}
+function setDemo(){key=Array.from({length:65},(_,i)=>letters[(i*3+Math.floor(i/5))%5]);$('keyStatus').textContent='Gabarito demonstrativo carregado. Substitua pelas respostas oficiais antes de usar numa prova real.';}
+function grade(){
+ const counts=subjects.map((name,s)=>{let correct=0,answered=0;for(let j=s*5;j<s*5+5;j++){if(student[j])answered++;if(key[j]&&student[j]===key[j])correct++;}return {name,correct,answered};});
+ const total=counts.reduce((a,x)=>a+x.correct,0),answered=student.filter(Boolean).length;
+ $('result').style.display='block';
+ $('result').innerHTML=`<div class="tag">Correção calculada</div><div class="total">${total} / 65 pontos</div><p>${answered} respostas preenchidas · ${65-answered} em branco ou não reconhecidas</p><div class="subjects">${counts.map(x=>`<div class="subject"><strong>${x.name}</strong><div class="total" style="font-size:1.35rem">${x.correct}/5</div><span class="muted small">${x.answered} respondidas</span></div>`).join('')}</div><p class="small warning">Confirme se o gabarito oficial foi cadastrado corretamente. Esta pontuação compara as respostas selecionadas com o gabarito configurado.</p>`;
+}
+$('file').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;if(!f.type.startsWith('image/')){$('status').textContent='Selecione um arquivo de imagem.';return;}const url=URL.createObjectURL(f);$('preview').src=url;$('preview').style.display='block';$('readBtn').disabled=false;$('status').textContent='Imagem carregada. O leitor automático precisa de uma folha no modelo padronizado; por enquanto, confira ou selecione as respostas na área abaixo.';});
+$('readBtn').addEventListener('click',()=>{$('status').textContent='A imagem foi carregada, mas o reconhecimento automático ainda precisa ser calibrado com o modelo padronizado. Não vamos inventar respostas: confira as alternativas manualmente por enquanto.';$('answers').scrollIntoView({behavior:'smooth',block:'start'});});
+$('makeKey').addEventListener('click',()=>{if($('keyMode').value==='demo')setDemo();else{key=Array(65).fill('');$('keyStatus').textContent='Gabarito limpo.';}});
+$('clearKey').addEventListener('click',()=>{key=Array(65).fill('');$('keyStatus').textContent='Gabarito limpo.';});
+$('gradeBtn').addEventListener('click',grade);
+$('resetBtn').addEventListener('click',()=>{student=Array(65).fill('');makeFields();$('result').style.display='none';});
+$('templateBtn').addEventListener('click',()=>window.print());
+setDemo();makeFields();
+</script>
+<style>@media print{body{background:white;color:black}main{max-width:none}.hero p,.grid,.footer,#answers,.actions,.status{display:none!important}.card{border:0;box-shadow:none}.card h2{color:black}}</style>
+</body></html>
